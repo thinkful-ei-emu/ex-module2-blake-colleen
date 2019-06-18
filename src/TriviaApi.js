@@ -19,7 +19,6 @@ class TriviaApi {
         if (data.response_code !== 0) {
           return Promise.reject({ message: `API returned error code: ${data.response_code}. Try a different request.`});
         }
-
         // Otherwise, success! Return the data to automatically resolve the promise successfully.
         console.log(data);
         return data;

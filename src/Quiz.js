@@ -26,11 +26,11 @@ class Quiz extends Model{
     this.asked = [];
     this.active = false;
     this.score = 0;
-
     const triviaApi = new TriviaApi();
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
       .then(data => {
         data.results.forEach(questionData => {
+          console.log(questionData);
           this.unasked.push(new Question(questionData));
           this.nextQuestion();
           this.active = true;
@@ -53,6 +53,7 @@ class Quiz extends Model{
   nextQuestion() {
     const currentQ = this.getCurrentQuestion();
     if (currentQ && currentQ.getAnswerStatus() === -1) {
+      this.update();
       return false;
     }
 
