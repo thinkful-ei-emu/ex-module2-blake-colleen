@@ -4,7 +4,7 @@ import Model from './lib/Model';
 
 class Quiz extends Model{
 
-  static DEFAULT_QUIZ_LENGTH = 2;
+  static DEFAULT_QUIZ_LENGTH = 5;
 
   constructor() {
     super();
@@ -34,9 +34,16 @@ class Quiz extends Model{
           this.unasked.push(new Question(questionData));
           this.nextQuestion();
           this.active = true;
+          this.update();
+          console.log(this.active);
         });
       })
       .catch(err => console.log(err.message));
+  }
+
+  getTotalQuestions() {
+    let total = this.unasked.length + this.asked.length;
+    return total;
   }
 
   getCurrentQuestion() {
@@ -50,11 +57,23 @@ class Quiz extends Model{
     }
 
     this.asked.unshift(this.unasked.pop());
+    this.update();
     return true;
   }
 
   increaseScore() {
-    this.score++;    
+    this.score++;
+    this.update();    
+  }
+
+  getHighScore(){
+    let highScore = 0;
+    for (let i=0; i < this.scoreHistory.length; i++){
+      if (this.score > this.scoreHistory[i]){
+        highScore = score;
+      } 
+    }
+    return highScore;
   }
 
   answerCurrentQuestion(answerText) {
@@ -66,10 +85,12 @@ class Quiz extends Model{
 
     // Otherwise, submit the answer
     currentQ.submitAnswer(answerText);
+    this.update();
 
     // If correct, increase score
     if (currentQ.getAnswerStatus() === 1) {
       this.increaseScore();
+      this.update();
     }
 
     return true;
