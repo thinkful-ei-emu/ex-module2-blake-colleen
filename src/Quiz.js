@@ -24,7 +24,7 @@ class Quiz extends Model{
   startGame() {
     this.unasked = [];
     this.asked = [];
-    this.active = false;
+    this.active = true;
     this.score = 0;
     const triviaApi = new TriviaApi();
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
@@ -32,13 +32,13 @@ class Quiz extends Model{
         data.results.forEach(questionData => {
           console.log(questionData);
           this.unasked.push(new Question(questionData));
+          console.log('unasked', this.unasked);
           this.nextQuestion();
-          this.active = true;
-          this.update();
-          console.log(this.active);
+          //this.active = true;
+          //console.log(this);
         });
       })
-      .catch(err => console.log(err.message));
+      .catch(err => console.log('helli'));
   }
 
   getTotalQuestions() {

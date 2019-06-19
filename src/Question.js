@@ -34,7 +34,7 @@ class Question {
    *  1 = answered, correct
    */
   getAnswerStatus() {
-    if (this.userAnswer === null) {
+    if (!this.userAnswer) {
       return -1;
     } else if (this.userAnswer === this.correctAnswer) {
       return 1;

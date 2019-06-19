@@ -10,17 +10,19 @@ class QuizDisplay extends Renderer {
   template() {
     // if quiz is inactive and no questions are asked yet, then
     // we're at the intro state of app
-    if (!this.model.active && this.model.asked.length === 0) {
+  
+    if (this.model.asked.length === 0) {
+      console.log(this.model.active);
       return  `
       <div>
         <h1>Welcome to our trivia quiz</h1>
 
         <h3>Test your smarts and see how high you can score!</h3>
 
-        <button class="start">Start your game </button>
+        <button type= "submit" class="start">Start your game </button>
       </div> `;
     }
-    if (this.model.active &&  !this.model.getCurrentQuestion().userAnswer){
+    if (this.model.active  && ( this.model.getCurrentQuestion() && this.model.getCurrentQuestion().getAnswerStatus())){
       return `
         <h1> ${this.model.getCurrentQuestion().text} </h1>
         <form>
