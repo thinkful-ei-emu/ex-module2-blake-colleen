@@ -24,7 +24,7 @@ class Quiz extends Model{
   startGame() {
     this.unasked = [];
     this.asked = [];
-    this.active = true;
+    this.active = false;
     this.score = 0;
     const triviaApi = new TriviaApi();
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
@@ -53,6 +53,7 @@ class Quiz extends Model{
 
   nextQuestion() {
     const currentQ = this.getCurrentQuestion();
+   
     if (currentQ && currentQ.getAnswerStatus() === -1) {
       this.update();
       return false;

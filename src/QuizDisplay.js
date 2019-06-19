@@ -48,13 +48,15 @@ class QuizDisplay extends Renderer {
       
       ` ;
     }
-    if (this.model.active && this.model.getCurrentQuestion().userAnswer) {
+    console.log(this.model.getCurrentQuestion());
+    if (this.model.active && this.model.getCurrentQuestion() && this.model.getCurrentQuestion().userAnswer) {
       console.log(this.model.getCurrentQuestion().getAnswerStatus());
       if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
         return `<h1> ${this.model.getCurrentQuestion().text} </h1>
         <h3>You got it! </br> The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
         <button class="continue">Continue</button>`;
       } if (this.model.getCurrentQuestion().getAnswerStatus() === 0){
+        console.log(this.model.getCurrentQuestion());
         return `<h1> ${this.model.getCurrentQuestion().text} </h1>
         <h3>Sorry, that's incorrect. You answered: </br> ${this.model.getCurrentQuestion().userAnswer}
         </br>The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
@@ -62,7 +64,20 @@ class QuizDisplay extends Renderer {
       }
     }
 
-    if(!this.model.active && this.model.unasked.length === 0) {
+    if(this.model.active && this.model.unasked.length === 1) {
+      if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
+        return `<h1> ${this.model.getCurrentQuestion().text} </h1>
+        <h3>You got it! </br> The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
+        <button class="final">Continue</button>`;
+      } if (this.model.getCurrentQuestion().getAnswerStatus() === 0){
+        return `<h1> ${this.model.getCurrentQuestion().text} </h1>
+        <h3>Sorry, that's incorrect. You answered: </br> ${this.model.getCurrentQuestion().userAnswer}
+        </br>The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
+        <button class="final">Continue</button>`;
+      } 
+    }
+
+    if( this.model.unasked.length === 0) {
       if (this.model.score > this.model.getHighScore()) {
         return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</br>
         That's a new high score!</h3>
@@ -81,7 +96,8 @@ class QuizDisplay extends Renderer {
       'click .start': 'handleStart',
       'click .answerIt': 'handleSubmitAnswer',
       'click .continue': 'handleNextQuestion',
-      'click .play-again': 'handleReplay'
+      'click .play-again': 'handleReplay',
+      'click .final': 'renderFinalScreen'
     };
   }
 
@@ -111,5 +127,16 @@ class QuizDisplay extends Renderer {
     this.model.scoreHistory.push(this.model.score);
     this.model.startGame();
   }
+
+
+  renderFinalScreen(){
+    if (this.model.score > this.model.getHighScore()) {
+      return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</br>
+      That's a new high score!</h3>
+      <button id="play-again">Play Again</button>`;
+    } return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</h3>
+    <button class="play-again">Play Again</button>`;
+  }
+  
 }
 export default QuizDisplay;
