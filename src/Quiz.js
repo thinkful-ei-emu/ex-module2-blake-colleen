@@ -92,7 +92,7 @@ class Quiz extends Model{
     if (currentQ.getAnswerStatus() === 1) {
       this.increaseScore();
       this.update();
-    }
+    } else {this.update()};
 
     return true;
   }
