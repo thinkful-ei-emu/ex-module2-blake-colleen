@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Renderer from './lib/Renderer';
 import Question from './Question';
 
@@ -22,12 +23,12 @@ class QuizDisplay extends Renderer {
         <button type= "submit" class="start">Start your game </button>
       </div> `;
     }
-    if (this.model.active  && ( this.model.getCurrentQuestion() && this.model.getCurrentQuestion().getAnswerStatus())){
+    if (this.model.active  && this.model.getCurrentQuestion() && this.model.getCurrentQuestion().getAnswerStatus() === -1){
       return `
         <h1> ${this.model.getCurrentQuestion().text} </h1>
         <form>
         <div>
-          <input type="radio" id="Choice1" name="choice" value="${Question.answers[0]}">
+          <input type="radio" id="Choice1" name="choice" value="${this.model.getCurrentQuestion().answers[0]}">
           <label for="Choice1">${this.model.getCurrentQuestion().answers[0]}</label>
 
           <input type="radio" id="Choice2" name="choice" value="${this.model.getCurrentQuestion().answers[1]}">
@@ -48,14 +49,15 @@ class QuizDisplay extends Renderer {
       ` ;
     }
     if (this.model.active && this.model.getCurrentQuestion().userAnswer) {
-      if (this.model.getAnswerStatus() === 1){
+      console.log(this.model.getCurrentQuestion().getAnswerStatus());
+      if (this.model.getCurrentQuestion().getAnswerStatus() === 1){
         return `<h1> ${this.model.getCurrentQuestion().text} </h1>
-        <h3>You got it! </br> The correct answer was: </br>${this.model.correctAnswer}</h3>
+        <h3>You got it! </br> The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
         <button class="continue">Continue</button>`;
-      } if (this.model.getAnswerStatus() === 0){
+      } if (this.model.getCurrentQuestion().getAnswerStatus() === 0){
         return `<h1> ${this.model.getCurrentQuestion().text} </h1>
-        <h3>Sorry, that's incorrect. You answered: </br> ${this.model.userAnswer}
-        </br>The correct answer was: </br>${this.model.correctAnswer}</h3>
+        <h3>Sorry, that's incorrect. You answered: </br> ${this.model.getCurrentQuestion().userAnswer}
+        </br>The correct answer was: </br>${this.model.getCurrentQuestion().correctAnswer}</h3>
         <button class="continue">Continue</button>`;
       }
     }
@@ -87,17 +89,21 @@ class QuizDisplay extends Renderer {
   * All event handler functions should call model methods
   */
   handleStart() {
+    event.preventDefault();
     this.model.startGame();
   }
 
   handleNextQuestion() {
     event.preventDefault();
     this.model.nextQuestion();
+    console.log('yo');
   }
 
   handleSubmitAnswer(){
     event.preventDefault();
-    this.model.answerCurrentQuestion();
+    // eslint-disable-next-line quotes
+    let userA = $("input[name='choice']:checked").val();
+    this.model.answerCurrentQuestion(userA);
   }
 
   handleReplay(){

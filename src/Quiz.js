@@ -32,13 +32,14 @@ class Quiz extends Model{
         data.results.forEach(questionData => {
           console.log(questionData);
           this.unasked.push(new Question(questionData));
-          console.log('unasked', this.unasked);
-          this.nextQuestion();
-          //this.active = true;
+          //console.log('unasked', this.unasked);
+          this.active = true;
           //console.log(this);
         });
+        this.asked.push(this.unasked.pop());
+        this.update();
       })
-      .catch(err => console.log('helli'));
+      .catch(err => console.log(err.message));
   }
 
   getTotalQuestions() {
@@ -63,8 +64,7 @@ class Quiz extends Model{
   }
 
   increaseScore() {
-    this.score++;
-    this.update();    
+    this.score++;  
   }
 
   getHighScore(){
@@ -81,19 +81,19 @@ class Quiz extends Model{
     const currentQ = this.getCurrentQuestion();
     // Cannot find current question, so fail to answer
     if (!currentQ) return false;
-    // Current question has already been answered, so refuse to submit new answer    
+    // Current question has already been answered, so refuse to submit new answer 
+     
     if (currentQ.getAnswerStatus() !== -1) return false;
 
     // Otherwise, submit the answer
     currentQ.submitAnswer(answerText);
-    this.update();
+    
 
     // If correct, increase score
     if (currentQ.getAnswerStatus() === 1) {
       this.increaseScore();
-      this.update();
-    } else {this.update()};
-
+    } 
+    this.update();
     return true;
   }
 }
