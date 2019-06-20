@@ -68,7 +68,7 @@ class QuizDisplay extends Renderer {
       if (this.model.score > this.model.getHighScore()) {
         return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</br>
         That's a new high score!</h3>
-        <button id="play-again">Play Again</button>`;
+        <button class="play-again">Play Again</button>`;
       } return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</h3>
       <button class="play-again">Play Again</button>`;
     }
@@ -97,8 +97,10 @@ class QuizDisplay extends Renderer {
   }
 
   handleNextQuestion() {
+    const currentQuiz = this.model;
+    console.log(`length unasked ${currentQuiz.unasked.length}`)
     event.preventDefault();
-    this.model.nextQuestion();
+    currentQuiz.nextQuestion();
     console.log('yo');
   }
 

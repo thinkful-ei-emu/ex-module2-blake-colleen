@@ -58,14 +58,17 @@ class Quiz extends Model{
       this.update();
       return false;
     }
-
-    this.asked.unshift(this.unasked.pop());
-    this.update();
-    return true;
+      //this.asked.unshift(this.unasked.pop());
+      this.asked.unshift(this.unasked.pop());
+      this.update();
+      return true;
+    
+    
   }
+  
 
   increaseScore() {
-    this.score++;  
+    this.score++; 
   }
 
   getHighScore(){
