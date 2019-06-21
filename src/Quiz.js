@@ -17,6 +17,7 @@ class Quiz extends Model{
     // TASK: Add more props here per the exercise
     this.score = 0;
     this.scoreHistory = [];
+    this.highScore = 0;
 
   }
 
@@ -26,15 +27,14 @@ class Quiz extends Model{
     this.asked = [];
     this.active = false;
     this.score = 0;
+
     const triviaApi = new TriviaApi();
     triviaApi.fetchQuestions(Quiz.DEFAULT_QUIZ_LENGTH)
       .then(data => {
         data.results.forEach(questionData => {
           console.log(questionData);
           this.unasked.push(new Question(questionData));
-          //console.log('unasked', this.unasked);
           this.active = true;
-          //console.log(this);
         });
         this.asked.push(this.unasked.pop());
         this.update();
@@ -55,14 +55,18 @@ class Quiz extends Model{
     const currentQ = this.getCurrentQuestion();
    
     if (currentQ && currentQ.getAnswerStatus() === -1) {
-      this.update();
       return false;
     }
-      //this.asked.unshift(this.unasked.pop());
+    if(this.unasked.length === 0){
+      this.active=false;
+      this.scoreHistory.push(this.score);
+      this.update();
+      return 'reset';
+    } else {
       this.asked.unshift(this.unasked.pop());
       this.update();
       return true;
-    
+    }
     
   }
   
@@ -72,14 +76,14 @@ class Quiz extends Model{
   }
 
   getHighScore(){
-    let highScore = 0;
-    for (let i=0; i < this.scoreHistory.length; i++){
-      if (this.score > this.scoreHistory[i]){
-        highScore = score;
+      if (this.score > this.highScore){
+        this.highScore = this.score;
+        return true;
       } 
+      return 0;
     }
-    return highScore;
-  }
+    
+  
 
   answerCurrentQuestion(answerText) {
     const currentQ = this.getCurrentQuestion();
@@ -91,14 +95,15 @@ class Quiz extends Model{
 
     // Otherwise, submit the answer
     currentQ.submitAnswer(answerText);
-    
-
     // If correct, increase score
     if (currentQ.getAnswerStatus() === 1) {
       this.increaseScore();
-    } 
+      this.update();
+      return true;
+    } else {
     this.update();
-    return true;
+    return false;
+    }
   }
 }
 

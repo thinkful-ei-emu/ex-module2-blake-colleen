@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import Renderer from './lib/Renderer';
-import Question from './Question';
 
 class QuizDisplay extends Renderer {
 
@@ -14,7 +13,7 @@ class QuizDisplay extends Renderer {
 
     const currentQ = this.model.getCurrentQuestion();
   
-    if (this.model.asked.length === 0) {
+    if (!this.model.active && this.model.asked.length === 0) {
       return  `
       <div>
         <h1>Welcome to our trivia quiz</h1>
@@ -27,14 +26,15 @@ class QuizDisplay extends Renderer {
     if (this.model.active  && currentQ && currentQ.getAnswerStatus() === -1){
       let html = '';
       let options = '';
-      let header = `<h1> ${currentQ.text} </h1>`;
-       for (let i = 0; i < currentQ.answers.length; i++) {
-       options = options.concat(` <input type="radio" id="Choice${i}" name="choice" value="${currentQ.answers[i]}">
+      let header = `<h1> ${currentQ.text} </h1>
+    <form><fieldset>`;
+      for (let i = 0; i < currentQ.answers.length; i++) {
+        options = options.concat(` <input type="radio" id="Choice${i}" name="choice" value="${currentQ.answers[i]}">
         <label for="Choice${i}">${currentQ.answers[i]}</label>`);
-       }
-       let block = `<form><div>${options}</div><div><button type="submit" class="answerIt">Submit</button></div></form>`;
-       html = header.concat(block);
-       return html;
+      }
+      let block = `<div>${options}</div></fieldset><div><button type="submit" class="answerIt">Submit</button></div></form>`;
+      html = header.concat(block);
+      return html;
        
     }
     
@@ -51,26 +51,13 @@ class QuizDisplay extends Renderer {
       }
     }
 
-   /*  if(this.model.active && this.model.unasked.length === 1) {
-      if (currentQ.getAnswerStatus() === 1){
-        return `<h1> ${currentQ.text} </h1>
-        <h3>You got it! </br> The correct answer was: </br>${currentQ.correctAnswer}</h3>
-        <button class="final">Continue</button>`;
-      } if (currentQ.getAnswerStatus() === 0){
-        return `<h1> ${currentQ.text} </h1>
-        <h3>Sorry, that's incorrect. You answered: </br> ${currentQ.userAnswer}
-        </br>The correct answer was: </br>${currentQ.correctAnswer}</h3>
-        <button class="final">Continue</button>`;
-      } 
-    } */
-
-    if( this.model.unasked.length === 0) {
-      if (this.model.score > this.model.getHighScore()) {
-        return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</br>
+    if(!this.model.active && this.model.unasked.length === 0) {
+      if (this.model.getHighScore()) {
+        return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.getTotalQuestions()}</br>
         That's a new high score!</h3>
         <button class="play-again">Play Again</button>`;
-      } return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</h3>
-      <button class="play-again">Play Again</button>`;
+      }else {return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.getTotalQuestions()}</h3>
+      <button class="play-again">Play Again</button>`;}
     }
 
   }
@@ -84,49 +71,32 @@ class QuizDisplay extends Renderer {
       'click .answerIt': 'handleSubmitAnswer',
       'click .continue': 'handleNextQuestion',
       'click .play-again': 'handleReplay',
-     // 'click .final': 'renderFinalScreen'
+      
     };
   }
 
-  /**
-  * All event handler functions should call model methods
-  */
   handleStart() {
     event.preventDefault();
     this.model.startGame();
   }
 
   handleNextQuestion() {
-    const currentQuiz = this.model;
-    console.log(`length unasked ${currentQuiz.unasked.length}`)
     event.preventDefault();
+    const currentQuiz = this.model;
     currentQuiz.nextQuestion();
-    console.log('yo');
   }
 
   handleSubmitAnswer(){
     event.preventDefault();
-    // eslint-disable-next-line quotes
-    let userA = $("input[name='choice']:checked").val();
+    let userA = $('input[name=\'choice\']:checked').val();
     this.model.answerCurrentQuestion(userA);
   }
 
   handleReplay(){
     event.preventDefault();
-    this.model.scoreHistory.push(this.model.score);
-    this.model.asked.length = 0;
     this.model.startGame();
   }
 
-
-  /* renderFinalScreen(){
-    if (this.model.score > this.model.getHighScore()) {
-      return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</br>
-      That's a new high score!</h3>
-      <button id="play-again">Play Again</button>`;
-    } return `<h3>Good Job! </br> Your final score was ${this.model.score} out of ${this.model.asked.length}</h3>
-    <button class="play-again">Play Again</button>`;
-  } */
   
 }
 export default QuizDisplay;

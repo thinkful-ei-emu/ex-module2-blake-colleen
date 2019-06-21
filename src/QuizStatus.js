@@ -3,9 +3,15 @@ import Renderer from './lib/Renderer';
 
 class QuizStatus extends Renderer {
   template() {
-    let html =
-    `<div class="score"><h2>${this.model.score}</h2></div><div class="high-score><h2>${this.model.getHighScore()}</h2>
-    <div class="question-count">${this.model.asked.length} out of ${this.model.getTotalQuestions()}</div>`;
+    let html = `<div class="score"><h2>Score: 
+    ${this.model.score}</h2><h2>High Score: ${this.model.highScore}</h2>`;
+    
+    if (this.model.active){
+      html += `<div class="question-count">Progress: ${this.model.asked.length} 
+      out of ${this.model.getTotalQuestions()}</div>`;}
+    else {
+      html += '<div class="question-count">Progress: Inactive </div>';
+    }
     return html;
   }
 
