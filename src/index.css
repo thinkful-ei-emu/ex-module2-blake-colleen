@@ -1,0 +1,17 @@
+* {
+  margin: auto 0;
+  box-sizing: border-box;
+  font-family: 'Source Sans Pro', sans-serif;
+
+}
+
+.display {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 10%;
+  
+}
+
+main {
+}

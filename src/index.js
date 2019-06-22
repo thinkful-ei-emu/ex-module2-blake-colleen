@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Quiz from './Quiz';
 import QuizDisplay from './QuizDisplay.js';
 import QuizStatus from './QuizStatus.js';
+import './index.css';
 
 function main() {
   const q = new Quiz();
