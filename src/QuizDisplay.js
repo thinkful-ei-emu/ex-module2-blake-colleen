@@ -26,13 +26,13 @@ class QuizDisplay extends Renderer {
     if (this.model.active  && currentQ && currentQ.getAnswerStatus() === -1){
       let html = '';
       let options = '';
-      let header = `<h1> ${currentQ.text} </h1>
+      let header = `<h1 class="question"> ${currentQ.text} </h1>
     <form><fieldset>`;
       for (let i = 0; i < currentQ.answers.length; i++) {
         options = options.concat(` <input type="radio" id="Choice${i}" name="choice" value="${currentQ.answers[i]}">
         <label for="Choice${i}">${currentQ.answers[i]}</label>`);
       }
-      let block = `<div>${options}</div></fieldset><div><button type="submit" class="answerIt">Submit</button></div></form>`;
+      let block = `<div class="answers">${options}</div></fieldset><div><button type="submit" class="answerIt">Submit</button></div></form>`;
       html = header.concat(block);
       return html;
        

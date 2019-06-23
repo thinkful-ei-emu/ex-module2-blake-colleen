@@ -5,13 +5,32 @@
 
 }
 
+.status {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 1%;
+}
 .display {
   display: flex;
   justify-content: center;
   text-align: center;
-  padding: 10%;
+  padding: 1%;
+  flex-direction: column
   
 }
+.question {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.answers {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  
+}
+
 
 main {
 }
