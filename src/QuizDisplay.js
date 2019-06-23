@@ -16,11 +16,11 @@ class QuizDisplay extends Renderer {
     if (!this.model.active && this.model.asked.length === 0) {
       return  `
       <div>
-        <h1>Welcome to our trivia quiz</h1>
+        <h1 class='welcome'>Welcome to our trivia quiz!</h1>
 
         <h3>Test your smarts and see how high you can score!</h3>
 
-        <button type= "submit" class="start">Start your game </button>
+        <button type= "submit" class="start">Start</button>
       </div> `;
     }
     if (this.model.active  && currentQ && currentQ.getAnswerStatus() === -1){
@@ -29,8 +29,8 @@ class QuizDisplay extends Renderer {
       let header = `<h1 class="question"> ${currentQ.text} </h1>
     <form><fieldset>`;
       for (let i = 0; i < currentQ.answers.length; i++) {
-        options = options.concat(` <input type="radio" id="Choice${i}" name="choice" value="${currentQ.answers[i]}">
-        <label for="Choice${i}">${currentQ.answers[i]}</label>`);
+        options = options.concat(` <div class="answer"><input type="radio" id="Choice${i}" name="choice" value="${currentQ.answers[i]}">
+        <label for="Choice${i}">${currentQ.answers[i]}</label></div>`);
       }
       let block = `<div class="answers">${options}</div></fieldset><div><button type="submit" class="answerIt">Submit</button></div></form>`;
       html = header.concat(block);
@@ -41,12 +41,12 @@ class QuizDisplay extends Renderer {
     if (this.model.active && currentQ && currentQ.userAnswer) {
       if (currentQ.getAnswerStatus() === 1){
         return `<h1> ${currentQ.text} </h1>
-        <h3>You got it! </br> The correct answer was: </br>${currentQ.correctAnswer}</h3>
+        <h3>You got it! </br> The correct answer was: </br><span class="right">${currentQ.correctAnswer}</span></h3>
         <button class="continue">Continue</button>`;
       } if (currentQ.getAnswerStatus() === 0){
         return `<h1> ${currentQ.text} </h1>
-        <h3>Sorry, that's incorrect. You answered: </br> ${currentQ.userAnswer}
-        </br>The correct answer was: </br>${currentQ.correctAnswer}</h3>
+        <h3>Sorry, that's incorrect. You answered: </br><span class="wrong"> ${currentQ.userAnswer}</span>
+        </br>The correct answer was: </br><span class="right">${currentQ.correctAnswer}</span></h3>
         <button class="continue">Continue</button>`;
       }
     }
